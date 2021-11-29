@@ -31,4 +31,4 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: false
           title: "GitHub Build"
-          files: ${{github.workspace}}/tvheadend/tvheadend
+          files: ${{github.workspace}}/tvheadend/build.linux/tvheadend
