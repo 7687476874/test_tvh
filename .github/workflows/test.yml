@@ -1,0 +1,34 @@
+name: GitHub Automatic Build
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  build:
+    name: Tvheadend
+    runs-on: ubuntu-latest
+    steps:
+#      - uses: actions/checkout@v2
+#        name: Checkout
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install software-properties-common build-essential libpcre2-dev pkg-config bzip2 wget \
+          libavahi-client-dev zlib1g-dev libavcodec-dev libavutil-dev libavformat-dev libswscale-dev \
+          gettext cmake libiconv-hook-dev liburiparser-dev debhelper python2-minimal libdvbcsa-dev \
+          libiconv-hook1 libiconv-hook-dev dvb-apps jq gettext libavahi-client-dev libssl-dev
+      - name: Download the latest tvheadend
+        run: git clone https://github.com/tvheadend/tvheadend
+      - name: configuration
+        run: |
+          cd tvheadend
+          ./configure --disable-zlib
+          make
+      - name: Automatic Releases
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "GitHub Build"
+          files: ${{github.workspace}}/tvheadend/tvheadend
